@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img" aria-labelledby="t">
+<title id="t">Regra do prefixo mais longo aplicada ao destino 10.10.0.10</title>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.b{font-weight:600}.s{font-size:12.5px;fill:#57606a}.c{text-anchor:middle}
+.m{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:14px;text-anchor:middle}
+.ok{fill:#dafbe1;stroke:#1a7f37}.no{fill:#ffebe9;stroke:#cf222e}.hd{fill:#fbefff;stroke:#8250df}
+.g{fill:#1a7f37;font-weight:600}.r{fill:#cf222e;font-weight:600}
+</style>
+<rect width="100%" height="100%" fill="#fff"/>
+
+<text x="20" y="30" class="s">Entrada da tabela</text>
+<text x="300" y="30" class="s c">bit 1–8</text><text x="390" y="30" class="s c">9–16</text><text x="480" y="30" class="s c">17–24</text><text x="570" y="30" class="s c">25–32</text>
+<text x="650" y="30" class="s">Resultado</text>
+
+<text x="20" y="72" class="b">Destino 10.10.0.10</text>
+<rect x="257" y="52" width="86" height="28" rx="4" class="hd"/><rect x="347" y="52" width="86" height="28" rx="4" class="hd"/>
+<rect x="437" y="52" width="86" height="28" rx="4" class="hd"/><rect x="527" y="52" width="86" height="28" rx="4" class="hd"/>
+<text x="300" y="72" class="m">00001010</text><text x="390" y="72" class="m">00001010</text><text x="480" y="72" class="m">00000000</text><text x="570" y="72" class="m">00001010</text>
+
+<text x="20" y="122">10.10.0.0/16 → ue1</text>
+<rect x="257" y="102" width="86" height="28" rx="4" class="ok"/><rect x="347" y="102" width="86" height="28" rx="4" class="ok"/>
+<text x="300" y="122" class="m">00001010</text><text x="390" y="122" class="m">00001010</text><text x="480" y="122" class="m">········</text><text x="570" y="122" class="m">········</text>
+<text x="650" y="122" class="g">casa 16 bits ✓</text>
+
+<text x="20" y="167">192.168.X.0/24 → ue0</text>
+<rect x="257" y="147" width="86" height="28" rx="4" class="no"/>
+<text x="300" y="167" class="m">11000000</text><text x="390" y="167" class="m">10101000</text><text x="480" y="167" class="m">xxxxxxxx</text><text x="570" y="167" class="m">········</text>
+<text x="650" y="167" class="r">difere no 1º bit ✗</text>
+
+<text x="20" y="212">default /0 → ue0</text>
+<text x="300" y="212" class="m">········</text><text x="390" y="212" class="m">········</text><text x="480" y="212" class="m">········</text><text x="570" y="212" class="m">········</text>
+<text x="650" y="212" class="g">casa 0 bits ✓</text>
+
+<line x1="20" y1="235" x2="880" y2="235" stroke="#d0d7de"/>
+<text x="20" y="263" class="b">Duas entradas casam. Vence a de prefixo mais longo (/16): o pacote sai pela ue1.</text>
+<text x="20" y="287" class="s">Os pontos (·) são bits que a entrada não exige. A default só vence quando nenhuma outra casa.</text>
+</svg>

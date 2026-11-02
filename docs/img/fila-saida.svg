@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 270" width="900" height="270" role="img" aria-labelledby="t">
+<title id="t">Porta de saída: fila no buffer, transmissão um pacote por vez e descarte quando o buffer enche</title>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.b{font-weight:600}.s{font-size:12.5px;fill:#57606a}.c{text-anchor:middle}
+.wan{fill:#ddf4ff;stroke:#0969da;stroke-width:1.5}.rt{fill:#fff1e5;stroke:#bc4c00;stroke-width:1.3}
+.pk{fill:#ddf4ff;stroke:#0969da;stroke-width:1.2}.bad{fill:#ffebe9;stroke:#cf222e;stroke-width:1.5}
+.ar{stroke:#57606a;stroke-width:1.8;fill:none;marker-end:url(#a)}.arr{stroke:#cf222e;stroke-width:1.8;fill:none;marker-end:url(#r)}
+</style>
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#57606a"/></marker>
+<marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#cf222e"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#fff"/>
+
+<text x="95" y="70" class="c s">chegam da comutação</text>
+<rect x="40" y="100" width="30" height="26" rx="3" class="pk"/>
+<rect x="80" y="100" width="30" height="26" rx="3" class="pk"/>
+<rect x="120" y="100" width="30" height="26" rx="3" class="pk"/>
+<line x1="158" y1="113" x2="216" y2="113" class="ar"/>
+
+<text x="385" y="70" class="c b">buffer da porta de saída (fila FIFO)</text>
+<rect x="220" y="85" width="330" height="56" rx="6" fill="none" stroke="#57606a" stroke-width="1.5"/>
+<rect x="225" y="90" width="48" height="46" rx="4" fill="none" stroke="#8c959f" stroke-dasharray="4 3"/>
+<rect x="280" y="90" width="48" height="46" rx="4" class="rt"/>
+<rect x="335" y="90" width="48" height="46" rx="4" class="rt"/>
+<rect x="390" y="90" width="48" height="46" rx="4" class="rt"/>
+<rect x="445" y="90" width="48" height="46" rx="4" class="rt"/>
+<rect x="500" y="90" width="45" height="46" rx="4" class="rt"/>
+<text x="249" y="160" class="c s">livre</text>
+<text x="522" y="160" class="c s">próximo</text>
+
+<line x1="550" y1="113" x2="616" y2="113" class="ar"/>
+<text x="590" y="137" class="c s">um por vez</text>
+<rect x="620" y="86" width="160" height="54" rx="8" class="wan"/>
+<text x="700" y="109" class="c b">enlace de saída</text>
+<text x="700" y="128" class="c s">ue0 ou ue1</text>
+
+<path d="M135,128Q150,190 228,196" class="arr"/>
+<rect x="232" y="183" width="30" height="26" rx="3" class="bad"/>
+<path d="M238,189L256,203M256,189L238,203" stroke="#cf222e" stroke-width="2"/>
+<text x="276" y="195" fill="#cf222e" style="fill:#cf222e" class="b">buffer cheio: o pacote que chega é descartado</text>
+<text x="276" y="214" class="s">política drop-tail; filas ativas (AQM, como RED) podem descartar antes de encher</text>
+
+<text x="20" y="255" class="s">A fila cresce quando chega mais do que o enlace transmite. É aqui que a perda de pacotes acontece de fato (Kurose, §4.2.4, p. 319–322).</text>
+</svg>

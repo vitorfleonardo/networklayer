@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img" aria-labelledby="t">
+<title id="t">Repasse: o destino do cabeçalho indexa a tabela de repasse da Pi e define a interface de saída</title>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.b{font-weight:600}.h{font-size:15px;font-weight:600}.s{font-size:12.5px;fill:#57606a}.c{text-anchor:middle}
+.m{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:13px}
+.lan{fill:#dafbe1;stroke:#1a7f37;stroke-width:1.5}.nt{fill:#f6f8fa;stroke:#8c959f;stroke-width:1.2}
+.nat{fill:#fbefff;stroke:#8250df;stroke-width:1.5}.wh{fill:#fff;stroke:#8c959f;stroke-width:1.2}
+.ar{stroke:#57606a;stroke-width:1.8;fill:none;marker-end:url(#a)}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#57606a"/></marker></defs>
+<rect width="100%" height="100%" fill="#fff"/>
+
+<rect x="20" y="80" width="170" height="90" rx="8" class="nt"/>
+<text x="105" y="104" class="c b">Datagrama IP</text>
+<rect x="30" y="118" width="150" height="36" rx="5" class="nat"/>
+<text x="105" y="141" class="c m">destino 10.10.0.10</text>
+<line x1="190" y1="125" x2="246" y2="125" class="ar"/>
+<text x="219" y="113" class="c s">consulta</text>
+
+<text x="250" y="48" class="h">Tabela de repasse da Pi (netstat -rn -f inet)</text>
+<rect x="250" y="60" width="420" height="150" rx="6" class="wh"/>
+<rect x="250" y="60" width="420" height="35" rx="6" class="nt"/>
+<text x="265" y="83" class="b">Destino</text>
+<text x="440" y="83" class="b">Sai por</text>
+<text x="530" y="83" class="b">Próximo salto</text>
+<rect x="251" y="96" width="418" height="37" class="nat"/>
+<text x="265" y="119" class="m">10.10.0.0/16</text><text x="440" y="119" class="m">ue1</text><text x="530" y="119">entrega direta</text>
+<line x1="250" y1="171" x2="670" y2="171" stroke="#d0d7de"/>
+<text x="265" y="157" class="m">192.168.X.0/24</text><text x="440" y="157" class="m">ue0</text><text x="530" y="157">entrega direta</text>
+<text x="265" y="195" class="m">default</text><text x="440" y="195" class="m">ue0</text><text x="530" y="195" class="m">192.168.X.1</text>
+
+<line x1="670" y1="114" x2="716" y2="114" class="ar"/>
+<rect x="720" y="88" width="160" height="52" rx="8" class="lan"/>
+<text x="800" y="110" class="c b">sai pela ue1</text>
+<text x="800" y="128" class="c s">rumo à LAN</text>
+
+<text x="20" y="250">Outro exemplo: 8.8.8.8 não está em nenhuma rede conhecida, então casa só com a default e sai pela ue0, rumo a 192.168.X.1.</text>
+<text x="20" y="278" class="s">As duas primeiras linhas nascem dos IPs das interfaces; a default vem do DHCP da WAN. Não há protocolo de roteamento.</text>
+</svg>

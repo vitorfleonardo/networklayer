@@ -1,0 +1,5 @@
+# Os arquivos vão para o FreeBSD: CRLF quebra rc.conf, pf.conf e dnsmasq.conf
+*.conf text eol=lf
+*.md   text eol=lf
+*.svg  text eol=lf
+*.pdf  binary

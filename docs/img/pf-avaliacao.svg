@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" width="880" height="340" role="img" aria-labelledby="t">
+<title id="t">Como o pf avalia um pacote: estado, tradução e filtragem</title>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.b{font-weight:600}.s{font-size:12.5px;fill:#57606a}.c{text-anchor:middle}
+.lan{fill:#dafbe1;stroke:#1a7f37;stroke-width:1.5}.rt{fill:#fff1e5;stroke:#bc4c00;stroke-width:1.5}
+.nt{fill:#f6f8fa;stroke:#8c959f;stroke-width:1.3}.bad{fill:#ffebe9;stroke:#cf222e;stroke-width:1.5}
+.ar{stroke:#57606a;stroke-width:1.8;fill:none;marker-end:url(#a)}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0L10,5L0,10z" fill="#57606a"/></marker></defs>
+<rect width="100%" height="100%" fill="#fff"/>
+
+<rect x="20" y="145" width="140" height="60" rx="8" class="nt"/>
+<text x="90" y="170" class="c b">Pacote chega</text>
+<text x="90" y="190" class="c s">a ue0 ou ue1</text>
+<line x1="160" y1="175" x2="196" y2="175" class="ar"/>
+
+<polygon points="275,125 355,175 275,225 195,175" class="nt"/>
+<text x="275" y="171" class="c b">Pertence a</text>
+<text x="275" y="189" class="c b">um estado?</text>
+
+<path d="M275,125V60H376" class="ar"/>
+<text x="285" y="95" class="s">sim</text>
+<rect x="380" y="30" width="230" height="60" rx="8" class="lan"/>
+<text x="495" y="55" class="c b">Aplica a tradução guardada</text>
+<text x="495" y="75" class="c s">e passa sem reler as regras</text>
+
+<line x1="355" y1="175" x2="391" y2="175" class="ar"/>
+<text x="373" y="166" class="c s">não</text>
+<rect x="395" y="140" width="200" height="70" rx="8" class="rt"/>
+<text x="495" y="163" class="c b">1 · Tradução</text>
+<text x="495" y="182" class="c s">nat e rdr: vence a primeira</text>
+<text x="495" y="199" class="c s">o rdr marca tag DNAT</text>
+<line x1="595" y1="175" x2="631" y2="175" class="ar"/>
+<rect x="635" y="140" width="225" height="70" rx="8" class="rt"/>
+<text x="747" y="163" class="c b">2 · Filtragem</text>
+<text x="747" y="182" class="c s">pass e block: vence a última</text>
+<text x="747" y="199" class="c s">quick encerra na hora</text>
+
+<line x1="747" y1="140" x2="747" y2="94" class="ar"/>
+<text x="757" y="122" class="s">pass</text>
+<rect x="650" y="30" width="195" height="60" rx="8" class="lan"/>
+<text x="747" y="55" class="c b">Cria estado</text>
+<text x="747" y="75" class="c s">guarda a tradução e repassa</text>
+
+<line x1="747" y1="210" x2="747" y2="256" class="ar"/>
+<text x="757" y="238" class="s">block</text>
+<rect x="650" y="260" width="195" height="60" rx="8" class="bad"/>
+<text x="747" y="285" class="c b">Descarta</text>
+<text x="747" y="305" class="c s">com log, copia para pflog0</text>
+
+<text x="20" y="290" class="s">A tradução vem antes do filtro:</text>
+<text x="20" y="308" class="s">as regras pass e block já veem</text>
+<text x="20" y="326" class="s">o destino reescrito pelo rdr.</text>
+</svg>
