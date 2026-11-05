@@ -70,17 +70,31 @@ netstat -rn -f inet
 
 **Mostrar:** as quatro etapas da concessão e a reserva do IP.
 
+São usadas as duas sessões da Pi, como root. Antes de mexer no cabo, A deixa a captura aberta:
+
 ```sh
 # Sessão 1
-tail -f /var/log/dnsmasq.log
-
-# Sessão 2
 tcpdump -eni ue1 port 67 or port 68
 ```
 
-Com as duas sessões abertas, B desconecta e reconecta o cabo do host da LAN. Depois, A mostra as concessões com `cat /var/db/dnsmasq.leases`.
+B desconecta e reconecta o cabo do host da LAN. Quando os pacotes aparecerem na sessão 1, A procura a concessão mais recente:
 
-**Esperado:** DHCPDISCOVER, DHCPOFFER, DHCPREQUEST e DHCPACK com 10.10.0.10; no `tcpdump`, o destino `ff:ff:ff:ff:ff:ff`; no arquivo, a linha com o MAC do host.
+```sh
+# Sessão 2
+grep DHCPDISCOVER /var/log/dnsmasq.log | tail -1
+```
+
+O número antes de `DHCPDISCOVER` é o ID da conversa, que muda a cada concessão (por exemplo, `1402673964`). A usa esse número no lugar de `ID_DA_CONVERSA` para mostrar as quatro etapas e depois mostra a lease:
+
+```sh
+# Sessão 2
+grep ID_DA_CONVERSA /var/log/dnsmasq.log | grep -E "DHCP(DISCOVER|OFFER|REQUEST|ACK)"
+cat /var/db/dnsmasq.leases
+```
+
+**Esperado:** quatro linhas com o mesmo ID, DHCPDISCOVER, DHCPOFFER, DHCPREQUEST e DHCPACK, com o MAC do host e o 10.10.0.10; no `tcpdump`, o destino `ff:ff:ff:ff:ff:ff`; no arquivo, a linha com o MAC do host.
+
+Se o horário da linha do DHCPDISCOVER for antigo, a reconexão foi só uma renovação, com DHCPREQUEST e DHCPACK. Explique isso ao professor e siga com esse ID, que é o da última concessão completa.
 
 **Fala:** "Sem IP, o cliente usa 0.0.0.0 e envia para a difusão 255.255.255.255, em UDP nas portas 67 e 68. O servidor entrega IP, máscara, gateway e DNS (p. 341–344). A reserva pelo MAC garante o 10.10.0.10, que é o alvo do DNAT."
 
