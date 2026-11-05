@@ -141,17 +141,21 @@ Testar a partir da própria LAN (`IP_WAN_DA_PI:80` visto de dentro) não funcion
 
 ## 6. Bloqueio de ping (opcional)
 
-Este teste só vale se o professor pedir o bloqueio de ping da LAN para fora. A regra vem comentada no [pf.conf](../pf.conf). Antes de ativar, mostre o ping em 8.8.8.8 funcionando no host da LAN: se ele já falhar, a falha depois da regra não prova nada.
+Este teste só vale se o professor pedir o bloqueio de ping da LAN para fora. A regra vem comentada no [pf.conf](../pf.conf). O teste usa as duas sessões da Pi, como root, e o host da LAN. No Windows, use as versões da [tabela de comandos](#comandos-por-sistema).
 
-Na Pi, como root:
+1. **LAN:** mostre que o ping funciona antes da regra. Se já falhar aqui, a falha depois não prova nada:
 
-1. Abra o arquivo:
+   ```sh
+   ping -c 3 8.8.8.8
+   ```
+
+2. **Roteador, sessão 1:** abra o arquivo:
 
    ```sh
    ee /etc/pf.conf
    ```
 
-2. Apague o `#` do início da linha `block in quick log on $int_if ...`. Para salvar, aperte `Esc`, escolha `leave editor` e depois `save changes`.
+3. **Roteador, sessão 1:** apague o `#` do início da linha `block in quick log on $int_if ...`. Para salvar, aperte `Esc`, escolha `leave editor` e depois `save changes`.
 
    Para fazer a mesma alteração sem abrir o arquivo:
 
@@ -159,33 +163,50 @@ Na Pi, como root:
    sed -i '' 's/^# block in quick log/block in quick log/' /etc/pf.conf
    ```
 
-3. Valide e recarregue as regras. O recarregamento não derruba o SSH:
+4. **Roteador, sessão 1:** valide e recarregue as regras. O recarregamento não derruba o SSH:
 
    ```sh
    pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
    ```
 
-4. Confira se a regra foi carregada. Entre as linhas, deve aparecer `block drop in log quick on ue1`:
+5. **Roteador, sessão 1:** confira se a regra foi carregada. Entre as linhas, deve aparecer `block drop in log quick on ue1`:
 
    ```sh
    pfctl -s rules | grep icmp
    ```
 
-Se houver um ping rodando, encerre e comece outro, porque o antigo pode continuar passando pelo estado já criado.
+6. **Roteador, sessão 2:** abra a captura e deixe rodando. Ela precisa estar aberta antes dos próximos pings:
 
-| Onde | Ação | Resultado esperado |
-| --- | --- | --- |
-| LAN | Ping em 10.10.0.1 | Responde: o gateway está dentro do segmento |
-| LAN | Ping em 8.8.8.8 | Tempo esgotado ou `100% packet loss` |
-| LAN | Pedir página | Funciona: só o ICMP foi barrado |
-| Roteador | `tcpdump -n -e -ttt -i pflog0` | Os pings bloqueados aparecem no registro |
+   ```sh
+   tcpdump -n -e -ttt -i pflog0
+   ```
 
-Ao terminar, devolva o `#` à linha com `ee` ou com o `sed` abaixo e recarregue as regras:
+7. **LAN:** pingue o gateway. Ele responde e nada aparece na captura, porque está dentro do segmento:
 
-```sh
-sed -i '' 's/^block in quick log/# block in quick log/' /etc/pf.conf
-pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
-```
+   ```sh
+   ping -c 3 10.10.0.1
+   ```
+
+8. **LAN:** pingue um destino fora da LAN. O resultado é tempo esgotado ou `100% packet loss`, e os pings bloqueados aparecem na sessão 2. Um ping antigo ainda rodando pode continuar passando pelo estado já criado, então encerre-o antes:
+
+   ```sh
+   ping -c 3 8.8.8.8
+   ```
+
+9. **LAN:** peça uma página. Funciona, porque só o ICMP foi barrado:
+
+   ```sh
+   curl -I http://www.freebsd.org
+   ```
+
+10. **Roteador, sessão 2:** encerre a captura com `Ctrl+C`.
+
+11. **Roteador, sessão 1:** devolva o `#` à linha, com `ee` ou com o `sed` abaixo, e recarregue as regras:
+
+    ```sh
+    sed -i '' 's/^block in quick log/# block in quick log/' /etc/pf.conf
+    pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
+    ```
 
 A alteração fica só na Pi. Se o bloqueio for requisito, mantenha a regra ativa e retire o `#` também no `pf.conf` do projeto, para o ZIP ficar igual.
 
