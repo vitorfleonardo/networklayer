@@ -141,10 +141,37 @@ Testar a partir da própria LAN (`IP_WAN_DA_PI:80` visto de dentro) não funcion
 
 ## 6. Bloqueio de ping (opcional)
 
-Este teste só vale se o professor pedir o bloqueio de ping da LAN para fora. A regra vem comentada no [pf.conf](../pf.conf):
+Este teste só vale se o professor pedir o bloqueio de ping da LAN para fora. A regra vem comentada no [pf.conf](../pf.conf). Antes de ativar, mostre o ping em 8.8.8.8 funcionando no host da LAN: se ele já falhar, a falha depois da regra não prova nada.
 
-1. No projeto, retire o `#` da linha `block in quick log on $int_if ...` e copie o arquivo para a Pi.
-2. Na Pi: `pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf`. O recarregamento não derruba o SSH.
+Na Pi, como root:
+
+1. Abra o arquivo:
+
+   ```sh
+   ee /etc/pf.conf
+   ```
+
+2. Apague o `#` do início da linha `block in quick log on $int_if ...`. Para salvar, aperte `Esc`, escolha `leave editor` e depois `save changes`.
+
+   Para fazer a mesma alteração sem abrir o arquivo:
+
+   ```sh
+   sed -i '' 's/^# block in quick log/block in quick log/' /etc/pf.conf
+   ```
+
+3. Valide e recarregue as regras. O recarregamento não derruba o SSH:
+
+   ```sh
+   pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
+   ```
+
+4. Confira se a regra foi carregada. Entre as linhas, deve aparecer `block drop in log quick on ue1`:
+
+   ```sh
+   pfctl -s rules | grep icmp
+   ```
+
+Se houver um ping rodando, encerre e comece outro, porque o antigo pode continuar passando pelo estado já criado.
 
 | Onde | Ação | Resultado esperado |
 | --- | --- | --- |
@@ -153,7 +180,14 @@ Este teste só vale se o professor pedir o bloqueio de ping da LAN para fora. A 
 | LAN | Pedir página | Funciona: só o ICMP foi barrado |
 | Roteador | `tcpdump -n -e -ttt -i pflog0` | Os pings bloqueados aparecem no registro |
 
-Ao terminar, comente a linha de novo, se o bloqueio não for requisito.
+Ao terminar, devolva o `#` à linha com `ee` ou com o `sed` abaixo e recarregue as regras:
+
+```sh
+sed -i '' 's/^block in quick log/# block in quick log/' /etc/pf.conf
+pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
+```
+
+A alteração fica só na Pi. Se o bloqueio for requisito, mantenha a regra ativa e retire o `#` também no `pf.conf` do projeto, para o ZIP ficar igual.
 
 ## Checklist
 
